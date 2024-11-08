@@ -120,6 +120,13 @@ class InvoiceModal extends React.Component {
                       <td className="text-end" style={{width: '100px'}}>{this.props.currency} {this.props.discountAmmount}</td>
                     </tr>
                   }
+                  {this.props.net_amount != 0.00 &&
+                    <tr className="text-end">
+                      <td></td>
+                      <td className="fw-bold" style={{width: '100px'}}>Net Amount</td>
+                      <td className="text-end" style={{width: '100px'}}>{this.props.currency} {this.props.net_amount}</td>
+                    </tr>
+                  }
                   <tr className="text-end">
                     <td></td>
                     <td className="fw-bold" style={{width: '100px'}}>TOTAL</td>

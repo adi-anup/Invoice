@@ -31,7 +31,8 @@ class InvoiceForm extends React.Component {
       taxRate: '',
       taxAmmount: '0.00',
       discountRate: '',
-      discountAmmount: '0.00'
+      discountAmmount: '0.00',
+      net_amount:''
     };
     this.state.items = [
       {
@@ -48,49 +49,34 @@ class InvoiceForm extends React.Component {
   componentDidMount(prevProps) {
     this.handleCalculateTotal()
   }
-  handleRowDel(items) {
-    var index = this.state.items.indexOf(items);
-    this.state.items.splice(index, 1);
-    this.setState(this.state.items);
-  };
-  handleAddEvent(evt) {
-    var id = (+ new Date() + Math.floor(Math.random() * 999999)).toString(36);
-    var items = {
-      id: id,
-      name: '',
-      price: '1.00',
-      description: '',
-      itemPO:'',
-      quantity: 1
-    }
-    this.state.items.push(items);
-    this.setState(this.state.items);
+  handleRowDel(item) {
+    this.setState(prevState => {
+      const items = prevState.items.filter(i => i.id !== item.id);
+      return { items };
+    }, this.handleCalculateTotal);
   }
+
+  handleAddEvent() {
+    const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
+    const newItem = { id, name: '', description: '', price: '1.00', quantity: 1, itemPO: '' };
+
+    this.setState(prevState => ({ items: [...prevState.items, newItem] }), this.handleCalculateTotal);
+  }
+
   handleCalculateTotal() {
-    var items = this.state.items;
-    var subTotal = 0;
-
-    items.map(function(items) {
-      subTotal = parseFloat(subTotal + (parseFloat(items.price).toFixed(2) * parseInt(items.quantity))).toFixed(2)
-    });
-
-    this.setState({
-      subTotal: parseFloat(subTotal).toFixed(2)
-    }, () => {
-      this.setState({
-        taxAmmount: parseFloat(parseFloat(subTotal) * (this.state.taxRate / 100)).toFixed(2)
-      }, () => {
-        this.setState({
-          discountAmmount: parseFloat(parseFloat(subTotal) * (this.state.discountRate / 100)).toFixed(2)
-        }, () => {
-          this.setState({
-            total: ((subTotal - this.state.discountAmmount) + parseFloat(this.state.taxAmmount))
-          });
-        });
-      });
-    });
-
-  };
+    const subTotal = this.state.items.reduce((acc, item) => {
+      const itemTotal = parseFloat(item.price) * parseInt(item.quantity);
+      return acc + (isNaN(itemTotal) ? 0 : itemTotal);
+    }, 0);
+  
+    const netAmount = parseFloat(this.state.net_amount) || 0; // Ensure net_amount is numeric
+    const taxAmmount = (subTotal * (this.state.taxRate / 100)).toFixed(2);
+    const discountAmmount = (subTotal * (this.state.discountRate / 100)).toFixed(2);
+    const total = (subTotal + netAmount + parseFloat(taxAmmount) - parseFloat(discountAmmount)).toFixed(2);
+  
+    this.setState({ subTotal: subTotal.toFixed(2), taxAmmount, discountAmmount, total });
+  }
+  
   onItemizedItemEdit(evt) {
     var item = {
       id: evt.target.id,
@@ -110,11 +96,12 @@ class InvoiceForm extends React.Component {
     this.handleCalculateTotal();
   };
   editField = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-    this.handleCalculateTotal();
+    this.setState(
+      { [event.target.name]: event.target.value },
+      this.handleCalculateTotal  // Ensure calculation happens after state update
+    );
   };
+  
   onCurrencyChange = (selectedOption) => {
     this.setState(selectedOption);
   };
@@ -169,6 +156,26 @@ class InvoiceForm extends React.Component {
             <InvoiceItem onItemizedItemEdit={this.onItemizedItemEdit.bind(this)} onRowAdd={this.handleAddEvent.bind(this)} onRowDel={this.handleRowDel.bind(this)} currency={this.state.currency} items={this.state.items}/>
             <Row className="mt-4 justify-content-end">
               <Col lg={6}>
+              <div className="d-flex flex-row align-items-start justify-content-between">
+                  <span className="fw-bold">Net Amount:
+                  </span>
+                  <div className="d-flex justify-content-end align-items-center">
+                <span style={{ textAlign: 'right', minWidth: '50px' }}>
+                  {this.state.currency}
+                </span>
+                <span>
+                  <Form.Control
+                    type="text"
+                    value={this.state.net_amount}
+                    className="my-2"
+                    name="net_amount"
+                    onChange={(event) => this.editField(event)}
+                    min="1"
+                    style={{ maxWidth: '80px', marginLeft: '8px' }} // Add margin for spacing
+                  />
+                </span>
+              </div>
+                </div>
                 <div className="d-flex flex-row align-items-start justify-content-between">
                   <span className="fw-bold">Subtotal:
                   </span>
@@ -212,7 +219,7 @@ class InvoiceForm extends React.Component {
         <Col md={4} lg={3}>
           <div className="sticky-top pt-md-3 pt-xl-4">
             <Button variant="primary" type="submit" className="d-block w-100">Review Invoice</Button>
-            <InvoiceModal showModal={this.state.isOpen} closeModal={this.closeModal} info={this.state} items={this.state.items} currency={this.state.currency} subTotal={this.state.subTotal} taxAmmount={this.state.taxAmmount} discountAmmount={this.state.discountAmmount} total={this.state.total}/>
+            <InvoiceModal showModal={this.state.isOpen} closeModal={this.closeModal} info={this.state} items={this.state.items} currency={this.state.currency} subTotal={this.state.subTotal} net_amount={this.state.net_amount} taxAmmount={this.state.taxAmmount} discountAmmount={this.state.discountAmmount} total={this.state.total}/>
             <Form.Group className="mb-3">
               <Form.Label className="fw-bold">Currency:</Form.Label>
               <Form.Select onChange={event => this.onCurrencyChange({currency: event.target.value})} className="btn btn-light my-1" aria-label="Change Currency">
