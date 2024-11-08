@@ -129,6 +129,10 @@ class InvoiceModal extends React.Component {
                 <div className="bg-light py-3 px-4 rounded">
                   {this.props.info.notes}
                 </div>}
+              {this.props.info.PO_Number &&
+                <div className="bg-light py-3 px-4 rounded">
+                  {this.props.info.PO_Number}
+                </div>}
             </div>
           </div>
           <div className="pb-4 px-4">

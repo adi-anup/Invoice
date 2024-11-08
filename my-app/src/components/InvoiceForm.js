@@ -25,6 +25,7 @@ class InvoiceForm extends React.Component {
       billFromEmail: '',
       billFromAddress: '',
       notes: '',
+      PO_Number: '', 
       total: '0.00',
       subTotal: '0.00',
       taxRate: '',
@@ -201,6 +202,9 @@ class InvoiceForm extends React.Component {
             <hr className="my-4"/>
             <Form.Label className="fw-bold">Notes:</Form.Label>
             <Form.Control placeholder="Thanks for your business!" name="notes" value={this.state.notes} onChange={(event) => this.editField(event)} as="textarea" className="my-2" rows={1}/>
+            <hr className="my-4"/>
+            <Form.Label className="fw-bold">PO_Number:</Form.Label>
+            <Form.Control placeholder="Please Provide the PO_id if present" name="PO_Number" value={this.state.PO_Number} onChange={(event) => this.editField(event)} as="textarea" className="my-2" rows={1}/>
           </Card>
         </Col>
         <Col md={4} lg={3}>
