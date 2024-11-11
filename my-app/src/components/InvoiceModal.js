@@ -72,6 +72,7 @@ class InvoiceModal extends React.Component {
                     <th>QTY</th>
                     <th>DESCRIPTION</th>
                     <th className="text-end">PRICE</th>
+                    <th>PO Number</th>
                     <th className="text-end">AMOUNT</th>
                   </tr>
                 </thead>
@@ -86,6 +87,7 @@ class InvoiceModal extends React.Component {
                           {item.name} - {item.description}
                         </td>
                         <td className="text-end" style={{width: '100px'}}>{this.props.currency} {item.price}</td>
+                        <td>{item.itemPO}</td>
                         <td className="text-end" style={{width: '100px'}}>{this.props.currency} {item.price * item.quantity}</td>
                       </tr>
                     );
@@ -116,6 +118,13 @@ class InvoiceModal extends React.Component {
                       <td></td>
                       <td className="fw-bold" style={{width: '100px'}}>DISCOUNT</td>
                       <td className="text-end" style={{width: '100px'}}>{this.props.currency} {this.props.discountAmmount}</td>
+                    </tr>
+                  }
+                  {this.props.net_amount != 0.00 &&
+                    <tr className="text-end">
+                      <td></td>
+                      <td className="fw-bold" style={{width: '100px'}}>Net Amount</td>
+                      <td className="text-end" style={{width: '100px'}}>{this.props.currency} {this.props.net_amount}</td>
                     </tr>
                   }
                   <tr className="text-end">
