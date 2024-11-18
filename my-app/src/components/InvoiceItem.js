@@ -24,6 +24,7 @@ class InvoiceItem extends React.Component {
               <th>QTY</th>
               <th>PRICE/RATE</th>
               <th>PO Number</th>
+              <th>Item Total</th>
               <th className="text-center">ACTION</th>
             </tr>
           </thead>
@@ -64,6 +65,7 @@ class ItemRow extends React.Component {
               placeholder: "Item description",
               value: this.props.item.description,
               id: this.props.item.id,
+              required: false,
             }}
           />
         </td>
@@ -105,6 +107,23 @@ class ItemRow extends React.Component {
               placeholder: "PO number",
               value: this.props.item.itemPO,
               id: this.props.item.id,
+            }}
+          />
+        </td>
+        <td style={{minWidth: '130px'}}>
+          <EditableField
+            onItemizedItemEdit={this.props.onItemizedItemEdit}
+            cellData={{
+              leading: this.props.currency,
+              type: "number",
+              name: "item_total",
+              min: 0,
+              step: "0.01",
+              presicion: 2,
+              textAlign: "text-end",
+              value: this.props.item.item_total,
+              id: this.props.item.id,
+              required: false
             }}
           />
         </td>
