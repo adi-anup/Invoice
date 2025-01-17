@@ -62,7 +62,7 @@ class InvoiceModal extends React.Component {
                   <div>{this.props.info.billFromEmail||''}</div>
                 </Col>
                 <Col md={4}>
-                  <div className="fw-bold mt-2">Date Of Issue:</div>
+                  <div className="fw-bold mt-2">Date:</div>
                   <div>{this.props.info.dateOfIssue||''}</div>
                 </Col>
               </Row>
