@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^1.4.0",
+    "react-bootstrap": "^2.10.9",
+    "react-icons": "^5.5.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "install": "^0.13.0",
+    "npm": "^11.2.0",
+    "react-scripts": "^3.0.1",
+    "start": "^5.1.0"
+  }
+}

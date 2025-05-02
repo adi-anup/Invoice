@@ -7,14 +7,13 @@ import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import InvoiceItem from './InvoiceItem';
 import InvoiceModal from './InvoiceModal';
-import InputGroup from 'react-bootstrap/InputGroup';
 
 class InvoiceForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isOpen: false,
-      currency: '$',
+      currency: '₹',
       currentDate: '',
       invoiceNumber: 1,
       dateOfIssue: '',
@@ -326,6 +325,7 @@ class InvoiceForm extends React.Component {
                   className="btn btn-light my-1" 
                   aria-label="Change Currency"
                 >
+                  <option value="₹">Rs (Rupees)</option>
                   <option value="$">USD (United States Dollar)</option>
                   <option value="£">GBP (British Pound Sterling)</option>
                   <option value="¥">JPY (Japanese Yen)</option>
