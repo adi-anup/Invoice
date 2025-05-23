@@ -1,119 +1,127 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import { BiTrash } from "react-icons/bi";
-import EditableField from './EditableField';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 class InvoiceItem extends React.Component {
-  render() {
-    var onItemizedItemEdit = this.props.onItemizedItemEdit;
-    var currency = this.props.currency;
-    var rowDel = this.props.onRowDel;
-    var itemTable = this.props.items.map(function(item) {
-      return (
-        <ItemRow onItemizedItemEdit={onItemizedItemEdit} item={item} onDelEvent={rowDel.bind(this)} key={item.id} currency={currency}/>
-      )
-    });
-    return (
-      <div>
-        <Table>
-          <thead>
-            <tr>
-              <th>ITEM</th>
-              <th>QTY</th>
-              <th>PRICE/RATE</th>
-              <th>PO Number</th>
-              <th className="text-center">ACTION</th>
-            </tr>
-          </thead>
-          <tbody>
-            {itemTable}
-          </tbody>
-        </Table>
-        <Button className="fw-bold" onClick={this.props.onRowAdd}>Add Item</Button>
-      </div>
-    );
-
-  }
-
-}
-class ItemRow extends React.Component {
-  onDelEvent() {
-    this.props.onDelEvent(this.props.item);
-  }
-  render() {
-    return (
-      <tr>
-        <td style={{width: '100%'}}>
-          <EditableField
-            onItemizedItemEdit={this.props.onItemizedItemEdit}
-            cellData={{
-              type: "text",
-              name: "name",
-              placeholder: "Item name",
-              value: this.props.item.name,
-              id: this.props.item.id,
-            }}
-          />
-          <EditableField
-            onItemizedItemEdit={this.props.onItemizedItemEdit}
-            cellData={{
-              type: "text",
-              name: "description",
-              placeholder: "Item description",
-              value: this.props.item.description,
-              id: this.props.item.id,
-            }}
-          />
-        </td>
-        <td style={{minWidth: '70px'}}>
-          <EditableField
-            onItemizedItemEdit={this.props.onItemizedItemEdit}
-            cellData={{
-              type: "number",
-              name: "quantity",
-              min: 0,
-              step: "1",
-              value: this.props.item.quantity,
-              id: this.props.item.id,
-            }}
-          />
-        </td>
-        <td style={{minWidth: '130px'}}>
-          <EditableField
-            onItemizedItemEdit={this.props.onItemizedItemEdit}
-            cellData={{
-              leading: this.props.currency,
-              type: "number",
-              name: "price",
-              min: 0,
-              step: "0.01",
-              presicion: 2,
-              textAlign: "text-end",
-              value: this.props.item.price,
-              id: this.props.item.id,
-            }}
-          />
-        </td>
-        <td style={{minWidth: '130px'}}>
-          <EditableField
-            onItemizedItemEdit={this.props.onItemizedItemEdit}
-            cellData={{
-              type: "text",
-              name: "itemPO", // Ensure consistency with `InvoiceForm`
-              placeholder: "PO number",
-              value: this.props.item.itemPO,
-              id: this.props.item.id,
-            }}
-          />
-        </td>
-        <td className="text-center" style={{minWidth: '50px'}}>
-          <BiTrash onClick={this.onDelEvent.bind(this)} style={{height: '33px', width: '33px', padding: '7.5px'}} className="text-white mt-1 btn btn-danger"/>
-        </td>
-      </tr>
-    );
-  }
+    render() {
+        const { onItemizedItemEdit, currency, items, onRowAdd, onRowDel } = this.props;
+        
+        return (
+            <div className="invoice-items">
+                <div className="row clearfix">
+                    <div className="col-12">
+                        <table className="table table-hover align-middle" style={{ width: '100%', margin: '20px 0' }}>
+                            <thead>
+                                <tr>
+                                    <th style={{ width: '15%', textAlign: 'left'  }}>ITEM</th>
+                                    <th style={{ width: '20%', textAlign: 'left'  }}>DESCRIPTION</th>
+                                    <th style={{ width: '7%', textAlign: 'left' }}>QTY</th>
+                                    <th style={{ width: '10%', textAlign: 'left' }}>UNIT PRICE</th>
+                                    <th style={{ width: '10%', textAlign: 'left' }}>DISCOUNT %</th>
+                                    <th style={{ width: '10%', textAlign: 'left' }}>TAX %</th>
+                                    <th style={{ width: '10%', textAlign: 'left' }}>FREIGHT</th>
+                                    <th style={{ width: '8%', textAlign: 'left' }}>SUBTOTAL</th>
+                                    <th style={{ width: '8%', textAlign: 'left' }}>GROSS</th>
+                                    <th style={{ width: '5%', textAlign: 'left' }}>DELETE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {items.map((item) => (
+                                    <tr key={item.id}>
+                                        <td>
+                                            <Form.Control type="text" name="name" value={item.name} 
+                                                onChange={(e) => onItemizedItemEdit({
+                                                    target: { id: item.id, name: 'name', value: e.target.value }
+                                                })}
+                                            />
+                                        </td>
+                                        <td>
+                                            <Form.Control type="text" name="description" value={item.description} 
+                                                onChange={(e) => onItemizedItemEdit({
+                                                    target: { id: item.id, name: 'description', value: e.target.value }
+                                                })}
+                                            />
+                                        </td>
+                                        <td className="text-center">
+                                            <Form.Control type="number" name="quantity" value={item.quantity} min="1"
+                                                onChange={(e) => onItemizedItemEdit({
+                                                    target: { id: item.id, name: 'quantity', value: e.target.value }
+                                                })}
+                                            />
+                                        </td>
+                                        <td>
+                                            <InputGroup>
+                                                <InputGroup.Text>{currency}</InputGroup.Text>
+                                                <Form.Control type="number" name="unitPrice" value={item.unitPrice} min="0.00" step="0.01"
+                                                    onChange={(e) => onItemizedItemEdit({
+                                                        target: { id: item.id, name: 'unitPrice', value: e.target.value }
+                                                    })}
+                                                />
+                                            </InputGroup>
+                                        </td>
+                                        <td>
+                                            <InputGroup>
+                                                <Form.Control type="number" name="itemDiscountPercentage" value={item.itemDiscountPercentage} min="0" max="100" step="0.1"
+                                                    onChange={(e) => onItemizedItemEdit({
+                                                        target: { id: item.id, name: 'itemDiscountPercentage', value: e.target.value }
+                                                    })}
+                                                />
+                                                <InputGroup.Text>%</InputGroup.Text>
+                                            </InputGroup>
+                                        </td>
+                                        <td>
+                                            <InputGroup>
+                                                <Form.Control type="number" name="itemTaxPercentage" value={item.itemTaxPercentage} min="0" max="100" step="0.1"
+                                                    onChange={(e) => onItemizedItemEdit({
+                                                        target: { id: item.id, name: 'itemTaxPercentage', value: e.target.value }
+                                                    })}
+                                                />
+                                                <InputGroup.Text>%</InputGroup.Text>
+                                            </InputGroup>
+                                        </td>
+                                        <td>
+                                            <InputGroup>
+                                                <InputGroup.Text>{currency}</InputGroup.Text>
+                                                <Form.Control type="number" name="freight" value={item.freight} min="0.00" step="0.01"
+                                                    onChange={(e) => onItemizedItemEdit({
+                                                        target: { id: item.id, name: 'freight', value: e.target.value }
+                                                    })}
+                                                />
+                                            </InputGroup>
+                                        </td>
+                                        <td>
+                                            <InputGroup>
+                                                <Form.Control plaintext readOnly value={item.subTotal} />
+                                            </InputGroup>
+                                        </td>
+                                        <td>
+                                            <InputGroup>
+                                                <Form.Control plaintext readOnly value={item.grossAmount} />
+                                            </InputGroup>
+                                        </td>
+                                        <td className="text-center">
+                                            <Button variant="danger" onClick={() => onRowDel(item)}>
+                                                ×
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div className="row clearfix">
+                    <div className="col-12 text-end">
+                        <Button className="btn btn-primary" onClick={onRowAdd}>
+                            Add Item
+                        </Button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default InvoiceItem;
