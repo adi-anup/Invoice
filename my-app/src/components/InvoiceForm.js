@@ -224,7 +224,7 @@ class InvoiceForm extends React.Component {
                   <Form.Control placeholder="Billing address" value={this.state.billToAddress} type="text" name="billToAddress" className="my-2" autoComplete="address" onChange={this.editField} required="required"/>
                 </Col>
                 <Col>
-                  <Form.Label className="fw-bold">Bill from:</Form.Label>
+                  <Form.Label className="fw-bold">Bill from :</Form.Label>
                   <Form.Control placeholder="Who is this invoice from?" rows={3} value={this.state.billFrom} type="text" name="billFrom" className="my-2" onChange={this.editField} autoComplete="name" required="required"/>
                   <Form.Control placeholder="Email address" value={this.state.billFromEmail} type="email" name="billFromEmail" className="my-2" onChange={this.editField} autoComplete="email"/>
                   <Form.Control placeholder="Billing address" value={this.state.billFromAddress} type="text" name="billFromAddress" className="my-2" autoComplete="address" onChange={this.editField} required="required"/>
